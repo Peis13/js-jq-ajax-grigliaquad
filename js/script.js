@@ -1,12 +1,12 @@
 $(document).ready(
   function() {
+    generaQuadrati();
 
     // Ad ogni click parte una richiesta AJAX che prende un numero random da 1 a 9.
     // Se è <= 5 il quadrato diventa giallo,
     // se è > di 5 il quadrato diventa verde.
     // Il numero ottenuto appare al centro del quadrato
     $(document).on('click', '.quadrato', function() {
-
       var quadratoCliccato = $(this);
 
       $.ajax(
@@ -22,15 +22,15 @@ $(document).ready(
                 'color':'darkblue'
               }
             ).text(numeroRicevuto);
+            quadratoCliccato.removeClass('giallo verde');
 
+            var classe;
             if (numeroRicevuto > 5) {
-              quadratoCliccato.removeClass('giallo');
-              quadratoCliccato.addClass('verde');
-
+              classe = 'verde';
             } else {
-              quadratoCliccato.removeClass('verde');
-              quadratoCliccato.addClass('giallo');
+              classe = 'giallo';
             }
+            quadratoCliccato.addClass(classe);
           },
           error: function(risultato, stato, errore) {
             alert('Errore: ' + errore);
@@ -38,5 +38,16 @@ $(document).ready(
         }
       );
     });
+
+    // Genera i quadrati per la griglia
+    function generaQuadrati() {
+      var source = $("#square-template").html();
+      var template = Handlebars.compile(source);
+      var html = template({});
+
+      for (var i = 0; i < 36; i++) {
+        $('.container').append(html);
+      }
+    }
   }
 );
